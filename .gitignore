@@ -10,7 +10,10 @@ ENV/
 
 # --- Dữ liệu (Dòng này cực kỳ quan trọng) ---
 # Chúng ta không đưa dữ liệu thô lên Git vì nó rất nặng và vi phạm bản quyền
-data/*
+data/**/*
+!data/**/
+!data/**/*.gitkeep
+# !*.gitkeep
 # Nếu muốn giữ lại cấu trúc folder mà không có file, 
 # hãy đặt một file .gitkeep trống trong folder đó.
 
