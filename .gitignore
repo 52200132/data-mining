@@ -31,7 +31,7 @@ logs/
 Thumbs.db
 
 # --- Editor ---
-.vscode/
+# .vscode/
 .idea/
 *.swp
 *.swo
@@ -40,3 +40,5 @@ Thumbs.db
 dist/
 build/
 *.egg-info/
+
+run_all.py

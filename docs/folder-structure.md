@@ -16,10 +16,13 @@ news-data-mining/
 │   ├── processed/              # Dữ liệu sau khi Preprocessing (đã tách từ, làm sạch)
 │   └── final/                  # File cuối cùng để đưa vào huấn luyện (ví dụ: train.csv, test.csv)
 ├── src/
-│   ├── __init__.py
-│   ├── crawler/                # Chứa các script cào dữ liệu
-│   │   ├── browser_bot.py      # Playwright để lấy danh sách link
-│   │   └── content_extractor.py # BeautifulSoup/Trafilatura để lấy nội dung
+|   |── crawler_bot/            # Folder chứa logic Scrapy chính
+│   |   ├── __init__.py
+│   |   ├── items.py            # Định nghĩa các trường theo Schema
+│   |   ├── pipelines.py        # Lưu file vào data/raw/
+│   |   ├── settings.py         # Cấu hình Delay, User-Agent, v.v.
+│   |   └── spiders/            # Nơi chứa các "con nhện"
+│   |       └── vnexpress.py    # Spider cho VnExpress
 │   ├── preprocessing/          # Chứa code làm sạch, tách từ (underthesea)
 │   └── utils/                  # Các hàm bổ trợ (lưu file, logger, validator)
 ├── configs/

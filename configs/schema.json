@@ -43,11 +43,7 @@
           "type": "string",
           "description": "Đoạn tóm tắt đầu bài"
         },
-        "body_raw": {
-          "type": "string",
-          "description": "Văn bản thô sau khi loại bỏ HTML"
-        },
-        "body_cleaned": {
+        "content": {
           "type": "string",
           "description": "Văn bản đã qua xử lý (loại bỏ quảng cáo, text thừa)"
         },

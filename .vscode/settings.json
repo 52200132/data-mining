@@ -1,0 +1,21 @@
+{
+  "cSpell.ignorePaths": [
+    "vscode-extension",
+    ".git/{info,lfs,logs,refs,objects}/**",
+    ".git/{index,*refs,*HEAD}",
+    ".vscode",
+    ".vscode-insiders",
+    "pyproject.toml",
+    ".gitignore",
+    "docs/*",
+    "setup-and-run-guide.md"
+  ],
+  "[python]": {
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false
+  },
+  "cSpell.words": ["vnexpress"],
+  "python-envs.defaultEnvManager": "ms-python.python:poetry",
+  "python-envs.defaultPackageManager": "ms-python.python:poetry"
+}
