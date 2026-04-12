@@ -10,7 +10,7 @@ process.crawl(
     VnExpressSpider,
     category="bong-da",
     label="Thể thao",
-    output_dir="data/the-thao",
+    output_dir="data/raw/the-thao",
     process_id="bot1",
 )
 
@@ -18,7 +18,7 @@ process.crawl(
     VnExpressSpider,
     category="the-thao/tennis",
     label="Thể thao",
-    output_dir="data/the-thao",
+    output_dir="data/raw/the-thao",
     process_id="bot2",
 )
 
