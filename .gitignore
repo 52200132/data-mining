@@ -1,0 +1,39 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv/
+env/
+venv/
+ENV/
+
+# --- Dữ liệu (Dòng này cực kỳ quan trọng) ---
+# Chúng ta không đưa dữ liệu thô lên Git vì nó rất nặng và vi phạm bản quyền
+data/*
+# Nếu muốn giữ lại cấu trúc folder mà không có file, 
+# hãy đặt một file .gitkeep trống trong folder đó.
+
+# --- Công cụ & Trình duyệt ---
+.pytest_cache/
+.coverage
+htmlcov/
+# Playwright/Selenium logs & binaries
+pw_browser_binaries/
+logs/
+*.log
+
+# --- Hệ điều hành ---
+.DS_Store
+Thumbs.db
+
+# --- Editor ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Build & Phân phối ---
+dist/
+build/
+*.egg-info/
