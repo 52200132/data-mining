@@ -57,11 +57,20 @@ class VnExpressSpider(scrapy.Spider):
         articles = response.css("article.item-news")
 
         for art in articles:
+
             # lấy link bài báo
-            url = art.css("h2.title-news a::attr(href)").get()
+            url = art.css("h2.title-news a[data-medium]::attr(href)").get()
+            if url is None:
+                self.logger.warning("No url found h2 title link")
+                url = art.css("h3.title-news a[data-medium]::attr(href)").get()
+            if url is None:
+                self.logger.warning("No url found h3 title link")
+                url = art.css("h4.title-news a[data-medium]::attr(href)").get()
 
             if url:
                 yield response.follow(url, self.parse_article)
+            else:
+                self.logger.warning("No url found h4 title link")
 
         # Test chạy thử 25 bài
         # self.article_count += articles.count()

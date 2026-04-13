@@ -8,7 +8,8 @@
     "pyproject.toml",
     ".gitignore",
     "docs/*",
-    "setup-and-run-guide.md"
+    "setup-and-run-guide.md",
+    "data/*"
   ],
   "[python]": {
     "editor.tabSize": 4,
