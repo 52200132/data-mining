@@ -14,8 +14,12 @@ dependencies = [
   "jsonschema>=4.19.0",
   "trafilatura>=1.6.0",   # Thư viện bóc tách nội dung báo chí cực sạch
   "underthesea>=6.1.0",   # Tách từ tiếng Việt
+  "regex (>=2026.4.4,<2027.0.0)",
+  "unidecode (>=1.4.0,<2.0.0)",
+  "matplotlib (>=3.10.8,<4.0.0)",
+  "seaborn (>=0.13.2,<0.14.0)",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 
 [project.optional-dependencies]
 dev = [
@@ -36,3 +40,8 @@ settings = "src.crawler_bot.settings"
 
 [tool.poetry]
 package-mode = false
+
+[dependency-groups]
+dev = [
+    "ipykernel (>=7.2.0,<8.0.0)"
+]

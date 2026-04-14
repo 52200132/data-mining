@@ -1,0 +1,15 @@
+{
+  ...
+  "doc_id": "VNEX-202405",
+  "source": "VnExpress",
+  "content": {
+    "title": "AI và tương lai của báo chí số",
+    "content": "Nội dung bài báo đã được loại bỏ quảng cáo và chuẩn hóa..."
+  },
+  "labeling": {
+    "original": ["Công nghệ", "Khoa học", "AI"],
+    "target": "Công nghệ",
+    "tags": ["AI", "Digital Media"]
+  }
+  ...
+}

@@ -9,7 +9,8 @@
     ".gitignore",
     "docs/*",
     "setup-and-run-guide.md",
-    "data/*"
+    "data/*",
+    "src/preprocessing/preprocessing.ipynb"
   ],
   "[python]": {
     "editor.tabSize": 4,
