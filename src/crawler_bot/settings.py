@@ -17,7 +17,8 @@ AUTOTHROTTLE_START_DELAY = 1.0
 
 # Kích hoạt pipeline lưu file
 ITEM_PIPELINES = {
-    "src.crawler_bot.pipelines.DuplicatesPipeline": 100,
+    # "src.crawler_bot.pipelines.DuplicatesPipeline": 100,
+    "src.crawler_bot.pipelines.IsValidItemPipeline": 200,
     "src.crawler_bot.pipelines.JsonlRotationPipeline": 300,
 }
 

@@ -17,7 +17,14 @@
     "editor.insertSpaces": true,
     "editor.detectIndentation": false
   },
-  "cSpell.words": ["vnexpress"],
+  "cSpell.words": [
+    "getall",
+    "multilabel",
+    "refetched",
+    "sapo",
+    "thanhnien",
+    "vnexpress"
+  ],
   "python-envs.defaultEnvManager": "ms-python.python:poetry",
   "python-envs.defaultPackageManager": "ms-python.python:poetry"
 }

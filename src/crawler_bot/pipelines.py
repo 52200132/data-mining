@@ -43,7 +43,7 @@ class JsonlRotationPipeline:
         )
 
     def __init__(self, output_path):
-        self.items_per_file = 300
+        self.items_per_file = 500
         self.item_count = 0
         self.file_index = 1
         self.current_file = None
@@ -58,7 +58,7 @@ class JsonlRotationPipeline:
         if self.current_file:
             self.current_file.close()
 
-        filename = f"news_data_{self.start_time}_part{self.file_index}_spider_{spider_name}_{spider_process_id}.jsonl"
+        filename = f"{self.start_time}_part{self.file_index}_spider_{spider_name}_{spider_process_id}.jsonl"
         filepath = os.path.join(self.output_dir, filename)
 
         self.current_file = open(filepath, "w", encoding="utf-8")
@@ -93,3 +93,59 @@ class JsonlRotationPipeline:
         self.output_dir = output_dir
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
+
+
+class IsValidItemPipeline:
+    def process_item(self, item, spider):
+        # Kiểm tra các trường bắt buộc trong metadata
+        metadata = item.get("metadata", {})
+        required_metadata_fields = [
+            "doc_id",
+            "source_name",
+            "source_url",
+            "publish_date",
+        ]
+        for field in required_metadata_fields:
+            if not metadata.get(field):
+                self.save_news_url_of_invalid_item(
+                    metadata.get("source_url", "unknown"), spider
+                )
+                raise DropItem(f"Thiếu trường metadata bắt buộc: {field}")
+
+        # Kiểm tra các trường bắt buộc trong content
+        content = item.get("content", {})
+        required_content_fields = ["title", "sapo", "body_cleaned"]
+        for field in required_content_fields:
+            if not content.get(field):
+                self.save_news_url_of_invalid_item(
+                    metadata.get("source_url", "unknown"), spider
+                )
+                raise DropItem(f"Thiếu trường content bắt buộc: {field}")
+
+        return item
+
+    def save_news_url_of_invalid_item(self, url, spider):
+        """
+        Lưu URL của các item không hợp lệ vào một file riêng để sau này có thể kiểm tra lại
+        """
+        target_label = getattr(spider, "label", "unknown_label")
+        # Save into data/failed-urls/thanhnien.csv with a timestamp column
+        out_dir = os.path.join("data", "failed-urls")
+        os.makedirs(out_dir, exist_ok=True)
+        csv_path = os.path.join(out_dir, "thanhnien.csv")
+
+        # Prepare CSV line: url, first_datetime_failed
+        ts = datetime.now().isoformat()
+        line = f"{url},{ts},False,none,none,{target_label}\n"
+
+        # If file doesn't exist or is empty, write header first
+        write_header = False
+        if not os.path.exists(csv_path) or os.path.getsize(csv_path) == 0:
+            write_header = True
+
+        with open(csv_path, "a", encoding="utf-8") as f:
+            if write_header:
+                f.write(
+                    "url,first_datetime_failed,refetched,successfully_fetched,refetched_datetime,label\n"
+                )
+            f.write(line)
