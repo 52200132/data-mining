@@ -1,3 +1,4 @@
+import datetime
 import json
 import re
 import glob
@@ -7,6 +8,7 @@ from pathlib import Path
 # underthesea dung de tach tu
 try:
     from underthesea import word_tokenize
+
     HAS_UNDERTHESEA = True
 except ImportError:
     print("⚠️  underthesea chưa cài. Chạy: pip install underthesea")
@@ -14,23 +16,139 @@ except ImportError:
 # STOPWORDS tieng viet
 
 STOPWORDS = {
-    "thì", "là", "mà", "của", "và", "các", "những", "được", "trong",
-    "có", "cho", "với", "về", "từ", "này", "đó", "theo", "tại", "khi",
-    "để", "đã", "sẽ", "đang", "bị", "do", "vì", "nên", "nhưng", "còn",
-    "hay", "hoặc", "như", "cũng", "vẫn", "đều", "chỉ", "rất", "một",
-    "hai", "ba", "tôi", "bạn", "họ", "chúng", "ta", "ông", "bà", "anh",
-    "chị", "em", "người", "năm", "ngày", "tháng", "hôm", "nay", "đây",
-    "kia", "ai", "gì", "nào", "đâu", "sao", "thế", "không", "chưa",
-    "hơn", "nhất", "nhiều", "ít", "lại", "lên", "xuống", "ra", "vào",
-    "tuy", "dù", "mặc", "dù", "vậy", "thật", "thực", "sự", "việc",
-    "điều", "cái", "con", "cây", "chiếc", "cuộc", "khoảng", "bởi",
-    "qua", "trên", "dưới", "sau", "trước", "giữa", "ngoài", "bên",
-    "phải", "thể", "muốn", "cần", "biết", "thấy", "nói", "làm",
+    "thì",
+    "là",
+    "mà",
+    "của",
+    "và",
+    "các",
+    "những",
+    "được",
+    "trong",
+    "có",
+    "cho",
+    "với",
+    "về",
+    "từ",
+    "này",
+    "đó",
+    "theo",
+    "tại",
+    "khi",
+    "để",
+    "đã",
+    "sẽ",
+    "đang",
+    "bị",
+    "do",
+    "vì",
+    "nên",
+    "nhưng",
+    "còn",
+    "hay",
+    "hoặc",
+    "như",
+    "cũng",
+    "vẫn",
+    "đều",
+    "chỉ",
+    "rất",
+    "một",
+    "hai",
+    "ba",
+    "tôi",
+    "bạn",
+    "họ",
+    "chúng",
+    "ta",
+    "ông",
+    "bà",
+    "anh",
+    "chị",
+    "em",
+    "người",
+    "năm",
+    "ngày",
+    "tháng",
+    "hôm",
+    "nay",
+    "đây",
+    "kia",
+    "ai",
+    "gì",
+    "nào",
+    "đâu",
+    "sao",
+    "thế",
+    "không",
+    "chưa",
+    "hơn",
+    "nhất",
+    "nhiều",
+    "ít",
+    "lại",
+    "lên",
+    "xuống",
+    "ra",
+    "vào",
+    "tuy",
+    "dù",
+    "mặc",
+    "dù",
+    "vậy",
+    "thật",
+    "thực",
+    "sự",
+    "việc",
+    "điều",
+    "cái",
+    "con",
+    "cây",
+    "chiếc",
+    "cuộc",
+    "khoảng",
+    "bởi",
+    "qua",
+    "trên",
+    "dưới",
+    "sau",
+    "trước",
+    "giữa",
+    "ngoài",
+    "bên",
+    "phải",
+    "thể",
+    "muốn",
+    "cần",
+    "biết",
+    "thấy",
+    "nói",
+    "làm",
 }
+
+
+def load_stopwords():
+    """
+    Tải stopwords từ file nếu tồn tại, nếu không thì sử dụng bộ stopwords mặc định
+    """
+    stopwords_path = Path("src/preprocessing/vietnamese-stopwords-dash.txt")
+    if stopwords_path.exists():
+        with open(stopwords_path, "r", encoding="utf-8") as f:
+            return set(line.strip() for line in f if line.strip())
+    else:
+        raise FileNotFoundError(
+            f"Không tìm thấy file stopwords tại: {stopwords_path}\n"
+            "Hãy tải file này từ: https://github.com/..."
+        )
+
+
+STOPWORDS_SET = load_stopwords()
+
 
 # ham chuan hoa Unicode
 def normalize_unicode(text: str) -> str:
     return unicodedata.normalize("NFC", text)
+
 
 # lam sach du lieu
 def clean_text(text: str) -> str:
@@ -49,6 +167,7 @@ def clean_text(text: str) -> str:
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
+
 # tach tu
 def segment_words(text: str) -> str:
     if not HAS_UNDERTHESEA:
@@ -58,22 +177,30 @@ def segment_words(text: str) -> str:
 
 def remove_stopwords(text: str) -> str:
     words = text.split()
-    filtered = [
-        w for w in words
-        if w.lower() not in STOPWORDS and len(w) > 1
-    ]
+    filtered = [w for w in words if w.lower() not in STOPWORDS and len(w) > 1]
     return " ".join(filtered)
 
+
+def new_remove_stopwords(text: str) -> str:
+    words = text.split()
+    filtered = [w for w in words if w.lower() not in STOPWORDS_SET and len(w) > 1]
+    return " ".join(filtered)
+
+
 """Pipeline đầy đủ: normalize → clean → lowercase → segment → remove stopwords"""
+
+
 def full_pipeline(text: str) -> str:
     text = normalize_unicode(text)
     text = clean_text(text)
     text = text.lower()
     text = segment_words(text)
-    text = remove_stopwords(text)
+    text = new_remove_stopwords(text)
     return text
 
+
 # ĐỌC & XỬ LÝ FILE DATA (.jsonl)
+
 
 def process_jsonl_file(file_path: str) -> list[dict]:
     """Đọc 1 file .jsonl, tiền xử lý và trả về list các bài đã clean"""
@@ -86,11 +213,11 @@ def process_jsonl_file(file_path: str) -> list[dict]:
             try:
                 item = json.loads(line)
 
-                title   = (item.get("content", {}) or {}).get("title",   "") or ""
-                sapo    = (item.get("content", {}) or {}).get("sapo",    "") or ""
-                body    = (item.get("content", {}) or {}).get("content", "") or ""
-                label   = (item.get("labeling", {}) or {}).get("target_label", "")
-                url     = (item.get("metadata", {}) or {}).get("source_url", "")
+                title = (item.get("content", {}) or {}).get("title", "") or ""
+                sapo = (item.get("content", {}) or {}).get("sapo", "") or ""
+                body = (item.get("content", {}) or {}).get("body_cleaned", "") or ""
+                label = (item.get("labeling", {}) or {}).get("target_label", "")
+                url = (item.get("metadata", {}) or {}).get("source_url", "")
                 word_ct = (item.get("content", {}) or {}).get("word_count", 0) or 0
 
                 # Bỏ bài quá ngắn (< 50 từ) — thường là video/ảnh không có text
@@ -102,15 +229,18 @@ def process_jsonl_file(file_path: str) -> list[dict]:
                 cleaned = full_pipeline(raw_text)
 
                 if cleaned and label:
-                    results.append({
-                        "text_cleaned": cleaned,
-                        "label": label,
-                        "url": url,
-                        "word_count": word_ct,
-                    })
+                    results.append(
+                        {
+                            "text_cleaned": cleaned,
+                            "label": label,
+                            "url": url,
+                            "word_count": word_ct,
+                        }
+                    )
             except (json.JSONDecodeError, KeyError, TypeError) as e:
                 print(f"  ⚠️  Lỗi dòng {line_num} trong {file_path}: {e}")
     return results
+
 
 # MAIN
 if __name__ == "__main__":
@@ -118,14 +248,15 @@ if __name__ == "__main__":
     label_counts = {}
 
     # doc file da merge tu du lieu 2 bao thanh nien va Vnexpress
-    merged_file = Path("data/processed/dataset_fixedlabel.jsonl")
-    
+    # merged_file = Path("data/processed/dataset_fixedlabel.jsonl")
+    merged_file = Path("data/processed/dataset_normalizedlabel.jsonl")
+
     if not merged_file.exists():
         print(f"Không tìm thấy file!!: {merged_file}")
         print("Hãy chạy merge_datasets.py trước!")
     else:
         print(f"Đang xử lý file merged: {merged_file}")
-        data = process_jsonl_file(str(merged_file))   
+        data = process_jsonl_file(str(merged_file))
         all_data.extend(data)
 
         print(f"Đã xử lý {len(data):,} bài từ file merged")
@@ -136,7 +267,8 @@ if __name__ == "__main__":
     # lưu dataset đã clean
     output_dir = Path("data/processed")
     output_dir.mkdir(parents=True, exist_ok=True)
-    out_path = output_dir / "dataset_final.jsonl"
+    timestamp = datetime.datetime.now().timestamp()
+    out_path = output_dir / f"dataset_final_{timestamp}.jsonl"
 
     with open(out_path, "w", encoding="utf-8") as f:
         for item in all_data:
@@ -146,6 +278,7 @@ if __name__ == "__main__":
 
     # thong ke de kiem tra co sot du lieu khong
     from collections import Counter
+
     label_counts = Counter(item["label"] for item in all_data)
     print("\nPhân phối nhãn:")
     for label, count in sorted(label_counts.items(), key=lambda x: -x[1]):
