@@ -294,14 +294,14 @@ TOPIC_KEYWORDS = {
 TOPIC_ICONS = {
     "Thể thao": "",
     "Kinh doanh": "",
-    "Pháp luật": "",
+    # "Pháp luật": "",
     "Công nghệ": "",
     "Giải trí": "",
-    "Chính trị - Xã hội": "",
+    "Chính trị": "",
     "Sức khỏe": "",
     "Du lịch": "",
     "Giáo dục": "",
-    "Khoa học": "",
+    # "Khoa học": "",
 }
 
 
